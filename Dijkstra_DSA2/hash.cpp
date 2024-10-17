@@ -17,7 +17,7 @@ hashTable::hashTable(int size) {
 }
 // uses hash function
 int hashTable::insert(const string &key, void *pv){
-
+    // rehash if more than half the capacity is used
     if(filled >= (capacity / 2)){
         if(!rehash()){
             return 2;
@@ -29,7 +29,6 @@ int hashTable::insert(const string &key, void *pv){
     if(contains(key)){
         return 1;
     }
-    // rehash if more than half the capacity is used
 
     // if mapped value is occupied (or lazily deleted), keep moving to the right
     while(data[hashedKey].isOccupied && !data[hashedKey].isDeleted){
@@ -115,7 +114,7 @@ int hashTable::hash(const string &key){
 int hashTable::findPos(const string &key){
     int hashedKey = hashTable::hash(key);
     while(data[hashedKey].isOccupied || data[hashedKey].isDeleted){
-        if(data[hashedKey].key == key){
+        if(data[hashedKey].key == key && !data[hashedKey].isDeleted){
             return hashedKey;
         }
         hashedKey++;
